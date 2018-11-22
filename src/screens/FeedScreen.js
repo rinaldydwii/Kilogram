@@ -19,7 +19,7 @@ class FeedScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.headerContainer}>
+                <View style={styles.headerBarContainer}>
                     <Text>Feed</Text>
                 </View>
                 <FlatList 
@@ -28,9 +28,9 @@ class FeedScreen extends Component {
                     data={this.state.feeds}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item, index}) => (
-                        <View>
-                            <View>
-                                <Text>Username</Text>
+                        <View style={styles.feedItemContainer}>
+                            <View style={styles.headerContainer}>
+                                <Text style={styles.usernameText}>Username</Text>
                             </View>
                             <View>
                                 <Image
@@ -38,10 +38,10 @@ class FeedScreen extends Component {
                                     style={styles.feedImage}
                                 />
                             </View>
-                            <View>
-                                <Text>Caption</Text>
+                            <View style={styles.footerContainer}>
+                                <Text style={styles.captionText}>Caption</Text>
                                 <Text>Comments</Text>
-                                <Text>Time ago</Text>
+                                <Text style={styles.publishDateTimeText}>{"Time ago".toUpperCase()}</Text>
                             </View>
 
                         </View>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    headerContainer: {
+    headerBarContainer: {
         height: 70,
         paddingTop: 20,
         backgroundColor: "white",
@@ -67,9 +67,31 @@ const styles = StyleSheet.create({
         borderColor: "#DFDFDF",
         borderBottomWidth: 1
     },
+    feedItemContainer: {
+        width: '100%',
+    },
+    headerContainer: {
+        paddingHorizontal: 15,
+        paddingVertical: 10
+    },
+    footerContainer: {
+        paddingHorizontal: 15,
+        paddingVertical: 10
+    },
     feedImage: {
         resizeMode: "cover",
         width: '100%',
         height: Dimensions.get('window').width
+    },
+    usernameText: {
+        fontWeight: "bold"
+    },
+    captionText: {
+        marginBottom: 5
+    },
+    publishDateTimeText: {
+        fontSize: 10,
+        color: "grey",
+        marginTop: 5
     }
 });
