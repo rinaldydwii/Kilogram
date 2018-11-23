@@ -50,7 +50,7 @@ class FeedScreen extends Component {
 
             for (var photo in data) {
                 let photoObj = data[photo]
-                database.ref("users").child(photoObj.author).orderByChild("posted").once("value").then(snapshot => {
+                database.ref("users").child(photoObj.author).once("value").then(snapshot => {
                     const exist = snapshot.val() !== null
                     if (exist) data = snapshot.val()
                     feeds.push({
@@ -58,7 +58,7 @@ class FeedScreen extends Component {
                         url: photoObj.url,
                         caption: photoObj.caption,
                         posted: this.timeConverter(photoObj.posted),
-                        author: data.username 
+                        author: data.username
                     })
                     this.setState({
                         refresh: false,
@@ -81,7 +81,7 @@ class FeedScreen extends Component {
                 </View>
                 { this.state.loading ? 
                     (
-                        <View style={styles.container}>
+                        <View style={styles.loadingContainer}>
                             <Text>Loading ...</Text>
                         </View>
                     ) :
@@ -122,6 +122,11 @@ export default FeedScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    loadingContainer: { 
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
     },
     headerBarContainer: {
         height: 70,
