@@ -52,8 +52,6 @@ class FeedScreen extends Component {
     }
     componentDidMount() {
         this.loadFeed()
-        console.log(this.state.feeds);
-        
     }
     render() {
         return (
