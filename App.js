@@ -4,6 +4,7 @@ import { createBottomTabNavigator, createAppContainer } from 'react-navigation'
 import FeedScreen from './src/screens/FeedScreen';
 import UploadScreen from './src/screens/UploadScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import { f, database, auth } from './src/configs/config'
 
 const mainStackNavigator = createBottomTabNavigator(
   {
@@ -16,6 +17,18 @@ const mainStackNavigator = createBottomTabNavigator(
 const MainStack = createAppContainer(mainStackNavigator)
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.login()
+  }
+  login = async() => {
+    // force user to login
+    try {
+      let user = await auth.signInWithEmailAndPassword('test@gmail.com', 'password');
+    } catch(e) {
+      console.log(e);
+    }
+  }
   render() {
     return (
       <MainStack />
