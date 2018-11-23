@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Dimensions, FlatList } from "react-native";
+import { f, database } from '../configs/config'
 
 class FeedScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            feeds: [0, 1, 2, 3, 4, 5],
-            refresh: false
+            feeds: [],
+            refresh: false,
+            loading: true
         }
     }
     loadNew = () => {
@@ -15,6 +17,43 @@ class FeedScreen extends Component {
             feeds: [6, 7, 8, 9, 10, 11],
             refresh: false
         })
+    }
+    loadFeed = () => {
+        this.setState({
+            refresh: true,
+        })
+        database.ref("photos").orderByChild("posted").once("value").then(snapshot => {
+            const exist = snapshot.val() !== null
+
+            if (exist) data = snapshot.val()
+            let feeds = this.state.feeds
+
+            for (var photo in data) {
+                let photoObj = data[photo]
+                database.ref("users").child(photoObj.author).orderByChild("posted").once("value").then(snapshot => {
+                    const exist = snapshot.val() !== null
+                    if (exist) data = snapshot.val()
+                    feeds.push({
+                        id: photo,
+                        url: photoObj.url,
+                        caption: photoObj.caption,
+                        posted: photoObj.caption,
+                        author: data.username 
+                    })
+                    this.setState({
+                        refresh: false,
+                        loading: false,
+                    })
+                })
+                .catch(e => console.log(e))
+            }
+        })
+        .catch(e => console.log(e))
+    }
+    componentDidMount() {
+        this.loadFeed()
+        console.log(this.state.feeds);
+        
     }
     render() {
         return (
