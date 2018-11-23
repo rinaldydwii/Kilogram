@@ -11,6 +11,26 @@ class FeedScreen extends Component {
             loading: true
         }
     }
+    pluralCheck = (s) => {
+        if (s == 1) return ' ago'
+        else return 's ago'
+    }
+    timeConverter = (timestamps) => {
+        let a = new Date(timestamps * 1000)
+        let seconds = Math.floor((new Date() - a) / 1000)
+
+        let interval = Math.floor(seconds / 31536000)
+        if (interval > 1) return interval+' year'+this.pluralCheck(interval)
+        interval = Math.floor(seconds / 2592000)
+        if (interval > 1) return interval+' month'+this.pluralCheck(interval)
+        interval = Math.floor(seconds / 86400)
+        if (interval > 1) return interval+' day'+this.pluralCheck(interval)
+        interval = Math.floor(seconds / 3600)
+        if (interval > 1) return interval+' hour'+this.pluralCheck(interval)
+        interval = Math.floor(seconds / 60)
+        if (interval > 1) return interval+' minute'+this.pluralCheck(interval)
+        return Math.floor(seconds)+' second'+this.pluralCheck(interval)
+    }
     loadNew = () => {
         this.setState({refresh: true})
         this.setState({
@@ -37,7 +57,7 @@ class FeedScreen extends Component {
                         id: photo,
                         url: photoObj.url,
                         caption: photoObj.caption,
-                        posted: photoObj.caption,
+                        posted: this.timeConverter(photoObj.posted),
                         author: data.username 
                     })
                     this.setState({
@@ -52,39 +72,47 @@ class FeedScreen extends Component {
     }
     componentDidMount() {
         this.loadFeed()
-    }
+    } 
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.headerBarContainer}>
                     <Text>Feed</Text>
                 </View>
-                <FlatList 
-                    refreshing={this.state.refresh}
-                    onRefresh={this.loadNew}
-                    data={this.state.feeds}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, index}) => (
-                        <View style={styles.feedItemContainer}>
-                            <View style={styles.headerContainer}>
-                                <Text style={styles.usernameText}>Username</Text>
-                            </View>
-                            <View>
-                                <Image
-                                    source={{uri: 'https://source.unsplash.com/random/500x'+Math.floor(Math.random()*800) + 500 }}
-                                    style={styles.feedImage}
-                                />
-                            </View>
-                            <View style={styles.footerContainer}>
-                                <Text style={styles.captionText}>Caption</Text>
-                                <Text>Comments</Text>
-                                <Text style={styles.publishDateTimeText}>{"Time ago".toUpperCase()}</Text>
-                            </View>
-
+                { this.state.loading ? 
+                    (
+                        <View style={styles.container}>
+                            <Text>Loading ...</Text>
                         </View>
-                    )}
-                />
-                    
+                    ) :
+                    (
+                        <FlatList 
+                            refreshing={this.state.refresh}
+                            onRefresh={this.loadNew}
+                            data={this.state.feeds}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({item, index}) => (
+                                <View style={styles.feedItemContainer}>
+                                    <View style={styles.headerContainer}>
+                                        <Text style={styles.usernameText}>{item.author}</Text>
+                                    </View>
+                                    <View>
+                                        <Image
+                                            source={{uri: item.url }}
+                                            style={styles.feedImage}
+                                        />
+                                    </View>
+                                    <View style={styles.footerContainer}>
+                                        <Text style={styles.captionText}>{item.caption}</Text>
+                                        <Text>Comments</Text>
+                                        <Text style={styles.publishDateTimeText}>{item.posted.toUpperCase()}</Text>
+                                    </View>
+
+                                </View>
+                            )}
+                        />
+                    )
+                }
             </View>
         );
     }
