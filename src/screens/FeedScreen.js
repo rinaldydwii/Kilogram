@@ -50,7 +50,7 @@ class FeedScreen extends Component {
 
             for (var photo in data) {
                 let photoObj = data[photo]
-                database.ref("users").child(photoObj.author).once("value").then(snapshot => {
+                database.ref("users").child(photoObj.author).child("username").once("value").then(snapshot => {
                     const exist = snapshot.val() !== null
                     if (exist) data = snapshot.val()
                     feeds.push({
@@ -58,7 +58,7 @@ class FeedScreen extends Component {
                         url: photoObj.url,
                         caption: photoObj.caption,
                         posted: this.timeConverter(photoObj.posted),
-                        author: data.username
+                        author: data
                     })
                     this.setState({
                         refresh: false,
