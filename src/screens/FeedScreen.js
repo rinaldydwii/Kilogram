@@ -107,7 +107,9 @@ class FeedScreen extends Component {
                                     </View>
                                     <View style={styles.footerContainer}>
                                         <Text style={styles.captionText}>{item.caption}</Text>
-                                        <Text>Comments</Text>
+                                        <TouchableOpacity style={styles.usernameText} onPress={() => this.props.navigation.navigate('Comments')}>
+                                            <Text>View Comments</Text>
+                                        </TouchableOpacity>
                                         <Text style={styles.publishDateTimeText}>{item.posted.toUpperCase()}</Text>
                                     </View>
 
