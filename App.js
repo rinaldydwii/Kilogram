@@ -1,16 +1,30 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation'
+import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation'
 import FeedScreen from './src/screens/FeedScreen';
 import UploadScreen from './src/screens/UploadScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import { f, database, auth } from './src/configs/config'
+import UserProfileScreen from './src/screens/UserProfileScreen';
+import CommentsScreen from './src/screens/CommentsScreen';
 
-const mainStackNavigator = createBottomTabNavigator(
+const TabNavigator = createBottomTabNavigator(
   {
     Feed: { screen: FeedScreen },
     Upload: { screen: UploadScreen },
     Profile: { screen: ProfileScreen }
+  }
+)
+
+const mainStackNavigator = createStackNavigator(
+  {
+    Home: { screen: TabNavigator },
+    User: { screen: UserProfileScreen },
+    Comments: { screen: CommentsScreen }
+  }, {
+    initialRouteName: "Home",
+    mode: "modal",
+    headerMode: "none"
   }
 )
 
