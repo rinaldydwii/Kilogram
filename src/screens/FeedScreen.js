@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions, FlatList } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, FlatList } from "react-native";
 import { f, database } from '../configs/config'
 
 class FeedScreen extends Component {
@@ -58,7 +58,8 @@ class FeedScreen extends Component {
                         url: photoObj.url,
                         caption: photoObj.caption,
                         posted: this.timeConverter(photoObj.posted),
-                        author: data
+                        author: data,
+                        authorId: photoObj.author
                     })
                     this.setState({
                         refresh: false,
@@ -94,7 +95,9 @@ class FeedScreen extends Component {
                             renderItem={({item, index}) => (
                                 <View style={styles.feedItemContainer}>
                                     <View style={styles.headerContainer}>
-                                        <Text style={styles.usernameText}>{item.author}</Text>
+                                        <TouchableOpacity style={styles.usernameText} onPress={() => this.props.navigation.navigate('User', {userId: item.authorId})}>
+                                            <Text>{item.author}</Text>
+                                        </TouchableOpacity>
                                     </View>
                                     <View>
                                         <Image
